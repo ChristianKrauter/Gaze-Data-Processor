@@ -60,8 +60,10 @@ def do_per_game_stat(csv_dir, fname_regex='.*_.*_.*\.txt', is_ignore_null=False,
                 if episode_id is not None and episode_id != current_episode:
                     # compute the stat data for previous episode
                     game_play_time += episode_time
-                    lowest_cumulative_reward = min(lowest_cumulative_reward, episode_cumulative_reward)
-                    highest_cumulative_reward = max(highest_cumulative_reward, episode_cumulative_reward)
+                    lowest_cumulative_reward = min(
+                        lowest_cumulative_reward, episode_cumulative_reward)
+                    highest_cumulative_reward = max(
+                        highest_cumulative_reward, episode_cumulative_reward)
                     cnt_frame += episode_frame
                     if current_episode is not None:
                         cnt_episode += 1
@@ -72,19 +74,25 @@ def do_per_game_stat(csv_dir, fname_regex='.*_.*_.*\.txt', is_ignore_null=False,
                     episode_time = utils.set_value_by_int(0, duration)
                     episode_frame = 1
                     episode_score = utils.set_value_by_int(0, score)
-                    episode_cumulative_reward = utils.set_value_by_int(0, unclipped_reward)
+                    episode_cumulative_reward = utils.set_value_by_int(
+                        0, unclipped_reward)
                     current_episode = episode_id
                 # if it's still in the same episode
                 else:
-                    episode_time = utils.increment_by_int(episode_time, duration)
+                    episode_time = utils.increment_by_int(
+                        episode_time, duration)
                     episode_frame += 1
-                    episode_cumulative_reward = utils.increment_by_int(episode_cumulative_reward, unclipped_reward)
-                    episode_score = utils.set_value_by_int(episode_score, score)
+                    episode_cumulative_reward = utils.increment_by_int(
+                        episode_cumulative_reward, unclipped_reward)
+                    episode_score = utils.set_value_by_int(
+                        episode_score, score)
 
             # compute the stat data for the last episode
             game_play_time += episode_time
-            lowest_cumulative_reward = min(lowest_cumulative_reward, episode_cumulative_reward)
-            highest_cumulative_reward = max(highest_cumulative_reward, episode_cumulative_reward)
+            lowest_cumulative_reward = min(
+                lowest_cumulative_reward, episode_cumulative_reward)
+            highest_cumulative_reward = max(
+                highest_cumulative_reward, episode_cumulative_reward)
             cnt_frame += episode_frame
             cnt_episode += 1
             lowest_score = min(lowest_score, episode_score)
@@ -166,15 +174,18 @@ def do_per_trial_stat(csv_dir, saved_dir=None, fname_regex='.*_.*_.*\.txt', is_i
                                                              episode_max_cumulative_reward)
                         trial_highest_cumulative_reward = max(trial_highest_cumulative_reward,
                                                               episode_max_cumulative_reward)
-                        trial_lowest_score = min(trial_lowest_score, episode_max_score)
-                        trial_highest_score = max(trial_highest_score, episode_max_score)
+                        trial_lowest_score = min(
+                            trial_lowest_score, episode_max_score)
+                        trial_highest_score = max(
+                            trial_highest_score, episode_max_score)
                         cnt_episode += 1
 
                     game_play_time += episode_time
                     # reset the stat variables for the new episode
                     episode_time = utils.set_value_by_int(0, duration)
                     episode_max_score = utils.set_value_by_int(0, score)
-                    episode_max_cumulative_reward = utils.set_value_by_int(0, unclipped_reward)
+                    episode_max_cumulative_reward = utils.set_value_by_int(
+                        0, unclipped_reward)
                     episode_cumulative_reward = unclipped_reward
                     current_episode = episode_id
 
@@ -182,17 +193,24 @@ def do_per_trial_stat(csv_dir, saved_dir=None, fname_regex='.*_.*_.*\.txt', is_i
                 elif i_frame == n_frame - 1:
                     game_play_time += episode_time
                     cnt_episode += 1
-                    trial_lowest_cumulative_reward = min(trial_lowest_cumulative_reward, episode_max_cumulative_reward)
+                    trial_lowest_cumulative_reward = min(
+                        trial_lowest_cumulative_reward, episode_max_cumulative_reward)
                     trial_highest_cumulative_reward = max(trial_highest_cumulative_reward,
                                                           episode_max_cumulative_reward)
-                    trial_lowest_score = min(trial_lowest_score, episode_max_score)
-                    trial_highest_score = max(trial_highest_score, episode_max_score)
+                    trial_lowest_score = min(
+                        trial_lowest_score, episode_max_score)
+                    trial_highest_score = max(
+                        trial_highest_score, episode_max_score)
                 # if it's still in the same episode
                 else:
-                    episode_time = utils.increment_by_int(episode_time, duration)
-                    episode_cumulative_reward = utils.increment_by_int(episode_cumulative_reward, unclipped_reward)
-                    episode_max_cumulative_reward = max(episode_max_cumulative_reward, episode_cumulative_reward)
-                    episode_max_score = max(episode_max_score, utils.set_value_by_int(episode_max_score, score))
+                    episode_time = utils.increment_by_int(
+                        episode_time, duration)
+                    episode_cumulative_reward = utils.increment_by_int(
+                        episode_cumulative_reward, unclipped_reward)
+                    episode_max_cumulative_reward = max(
+                        episode_max_cumulative_reward, episode_cumulative_reward)
+                    episode_max_score = max(
+                        episode_max_score, utils.set_value_by_int(episode_max_score, score))
 
             # save and display the result
             if trial_highest_score == float('inf') or trial_highest_score == -float('inf'):
@@ -224,6 +242,7 @@ def do_per_trial_stat(csv_dir, saved_dir=None, fname_regex='.*_.*_.*\.txt', is_i
 def fname_condition(fname):
     trial_id = int(fname.split('_')[0])
     return trial_id > 0
+
 
 if __name__ == '__main__':
     if len(sys.argv) < 3:

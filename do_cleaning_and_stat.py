@@ -11,7 +11,8 @@ import data_stat
 
 if __name__ == '__main__':
     if len(sys.argv) < 3:
-        print('Usage: python data_cleaning_and_stat.py source_dir dest_dir [whether to include titles in txt file]')
+        print(
+            'Usage: python data_cleaning_and_stat.py source_dir dest_dir [whether to include titles in txt file]')
         exit(1)
 
     source_dir = sys.argv[1]
@@ -27,7 +28,8 @@ if __name__ == '__main__':
             exit(1)
 
     print('#'*20)
-    data_cleaning.save_asc_files_in_dir_to_csv(source_dir, dest_dir, is_include_title=include_title)
+    data_cleaning.save_asc_files_in_dir_to_csv(
+        source_dir, dest_dir, is_include_title=include_title)
     print('#' * 20)
     data_stat.do_per_trial_stat(dest_dir, dest_dir)
     print('#' * 20)

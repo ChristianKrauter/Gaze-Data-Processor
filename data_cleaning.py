@@ -59,15 +59,20 @@ def save_gaze_data_asc_file_to_csv(fname, saved_dir, is_include_title=True, save
         # write the frameid
         data_line = str(frameid[0]) + '_' + str(frameid[1]) + separator
         # write the episode id
-        data_line = add_to_data_line(frameid, frameid2episode, data_line, separator)
+        data_line = add_to_data_line(
+            frameid, frameid2episode, data_line, separator)
         # write the score
-        data_line = add_to_data_line(frameid, frameid2score, data_line, separator)
+        data_line = add_to_data_line(
+            frameid, frameid2score, data_line, separator)
         # write the duration
-        data_line = add_to_data_line(frameid, frameid2duration, data_line, separator)
+        data_line = add_to_data_line(
+            frameid, frameid2duration, data_line, separator)
         # write the unclipped_reward
-        data_line = add_to_data_line(frameid, frameid2unclipped_reward, data_line, separator)
+        data_line = add_to_data_line(
+            frameid, frameid2unclipped_reward, data_line, separator)
         # write the action
-        data_line = add_to_data_line(frameid, frameid2action, data_line, separator)
+        data_line = add_to_data_line(
+            frameid, frameid2action, data_line, separator)
         # write the pos (use space as separator)
         if frameid in frameid2pos:
             pos_list = frameid2pos[frameid]
@@ -76,7 +81,9 @@ def save_gaze_data_asc_file_to_csv(fname, saved_dir, is_include_title=True, save
                 data_line += 'null'
             else:
                 for i in range(0, n_pos):
-                    data_line = data_line + format(pos_list[i][0]/8.0, '.2f') + pos_separator + format(pos_list[i][1]/4.0, '.2f')
+                    data_line = data_line + \
+                        format(pos_list[i][0]/8.0, '.2f') + \
+                        pos_separator + format(pos_list[i][1]/4.0, '.2f')
                     if i < n_pos-1:
                         data_line += pos_separator
         else:
@@ -108,22 +115,26 @@ def save_asc_files_in_dir_to_csv(asc_dir, saved_dir, fname_regex='.', is_include
         if fname.endswith(".asc") and fname_format.match(fname):
             fpath = os.path.join(asc_dir, fname)
             print('Processing asc file: ' + fpath)
-            file_meta_data = save_gaze_data_asc_file_to_csv(fpath, saved_dir, is_include_title, saved_as_plain_txt)
+            file_meta_data = save_gaze_data_asc_file_to_csv(
+                fpath, saved_dir, is_include_title, saved_as_plain_txt)
             # write the meta data
             trial_id = int(fname.split('_')[0])
-            meta_file.write('\'' + str(trial_id) + '\'' + ':' + str(file_meta_data) + '\n')
+            meta_file.write('\'' + str(trial_id) + '\'' +
+                            ':' + str(file_meta_data) + '\n')
             meta_data_dict[trial_id] = file_meta_data
     # close the meta data file
     meta_file.close()
     # save the mata data to excel file
     if saved_to_excel:
-        utils.save_trials_data_to_excel(saved_dir, fname_meta_excel, meta_data_dict)
+        utils.save_trials_data_to_excel(
+            saved_dir, fname_meta_excel, meta_data_dict)
     return meta_data_dict
 
 
 if __name__ == '__main__':
     if len(sys.argv) < 3:
-        print('Usage: python data_cleaning.py source_dir dest_dir [whether to include titles in txt file]')
+        print(
+            'Usage: python data_cleaning.py source_dir dest_dir [whether to include titles in txt file]')
         exit(1)
 
     source_dir = sys.argv[1]
@@ -138,6 +149,5 @@ if __name__ == '__main__':
             print('For the third argument, please use True or False')
             exit(1)
 
-    save_asc_files_in_dir_to_csv(source_dir, dest_dir, is_include_title=include_title)
-
-
+    save_asc_files_in_dir_to_csv(
+        source_dir, dest_dir, is_include_title=include_title)

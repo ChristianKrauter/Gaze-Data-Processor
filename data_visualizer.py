@@ -19,7 +19,8 @@ class DrawgcWrapper:
 
     def draw_gc(self, screen, gaze_position):
         """ draw the gaze-contingent window on screen """
-        region_top_left = (gaze_position[0] - self.cursor_size[0] // 2, gaze_position[1] - self.cursor_size[1] // 2)
+        region_top_left = (
+            gaze_position[0] - self.cursor_size[0] // 2, gaze_position[1] - self.cursor_size[1] // 2)
         # Draws and shows the cursor content;
         screen.blit(self.cursor, region_top_left)
 
@@ -32,6 +33,8 @@ class DrawingStatus:
     target_fps = 60
     pause = False
     terminated = False
+
+
 ds = DrawingStatus()
 
 
@@ -41,7 +44,8 @@ def preprocess_and_sanity_check(png_files, frameid_list):
     # remove unrelated files
     for fname in png_files:
         if not fname.endswith(".png"):
-            print("Warning: %s is not a PNG file. Deleting it from the frames list" % fname)
+            print(
+                "Warning: %s is not a PNG file. Deleting it from the frames list" % fname)
             has_warning = True
             png_files.remove(fname)
 
@@ -88,13 +92,15 @@ def event_handler_func():
                 print("Moving to next frame")
                 ds.cur_frame_id += 1
             elif event.key == pygame.K_F3:
-                p = float(raw_input("Seeking through the video. Enter a percentage in float: "))
+                p = float(
+                    raw_input("Seeking through the video. Enter a percentage in float: "))
                 ds.cur_frame_id = int(p/100*ds.total_frame)
             elif event.key == pygame.K_SPACE:
                 ds.pause = not ds.pause
             elif event.key == pygame.K_F9:
                 ds.draw_many_gazes = not ds.draw_many_gazes
-                print("draw all gazes belonging to a frame: %s" % ("ON" if ds.draw_many_gazes else "OFF"))
+                print("draw all gazes belonging to a frame: %s" %
+                      ("ON" if ds.draw_many_gazes else "OFF"))
             elif event.key == pygame.K_F11:
                 ds.target_fps -= 2
                 print("Setting target FPS to %d" % ds.target_fps)
@@ -110,7 +116,8 @@ def event_handler_func():
 
 def visualize_csv(tar_fname, csv_fname):
     # read from the csv file
-    frameid2pos, _, frameid2duration, _, _, _, frameid_list = data_reader.read_gaze_data_csv_file(csv_fname)
+    frameid2pos, _, frameid2duration, _, _, _, frameid_list = data_reader.read_gaze_data_csv_file(
+        csv_fname)
     frameid_list = sorted(frameid_list, key=frameid_sort_key)
 
     # open the tar file
@@ -127,8 +134,10 @@ def visualize_csv(tar_fname, csv_fname):
     print("Uncompressing PNG tar file")
     tar.extractall(temp_extract_dir)
     # get the full path
-    temp_extract_full_path_dir = temp_extract_dir + '/' + png_files[0].split('/')[0]
-    print("Uncompressed PNG tar file into temporary directory: " + temp_extract_full_path_dir)
+    temp_extract_full_path_dir = temp_extract_dir + \
+        '/' + png_files[0].split('/')[0]
+    print("Uncompressed PNG tar file into temporary directory: " +
+          temp_extract_full_path_dir)
 
     # init pygame and other stuffs
     origin_w = 160
@@ -150,10 +159,11 @@ def visualize_csv(tar_fname, csv_fname):
     pygame.init()
     pygame.font.init()
     pygame_font = pygame.font.SysFont('Consolas', 28)
-    pygame.display.set_mode((w, h), pygame.RESIZABLE | pygame.DOUBLEBUF | pygame.RLEACCEL, 32)
+    pygame.display.set_mode((w, h), pygame.RESIZABLE |
+                            pygame.DOUBLEBUF | pygame.RLEACCEL, 32)
     screen = pygame.display.get_surface()
 
-    while True: #ds.cur_frame_id < ds.total_frame:
+    while True:  # ds.cur_frame_id < ds.total_frame:
         event_handler_func()
 
         # Load PNG file and draw the frame and the gaze-contingent window
@@ -162,9 +172,11 @@ def visualize_csv(tar_fname, csv_fname):
         # check if the corresponding png file exists
         if not os.path.isfile(png_fname):
             screen.fill((0, 0, 0))
-            text_surface_desc = pygame_font.render('Missing png file for frame id:', True, (255, 255, 255))
+            text_surface_desc = pygame_font.render(
+                'Missing png file for frame id:', True, (255, 255, 255))
             screen.blit(text_surface_desc, (w // 10, 2 * h // 5))
-            text_surface_frameid = pygame_font.render(frame_id, True, (255, 255, 255))
+            text_surface_frameid = pygame_font.render(
+                frame_id, True, (255, 255, 255))
             screen.blit(text_surface_frameid, (w // 10, 3 * h // 5))
         else:
             s = pygame.image.load(png_fname)
@@ -195,6 +207,7 @@ def visualize_csv(tar_fname, csv_fname):
     print("Deleting PNG files in temporary directory.")
     shutil.rmtree(temp_extract_full_path_dir)
 
+
 if __name__ == '__main__':
     if len(sys.argv) < 2:
         print('Usage: python data_visualizer.py tar_fname csv_fname')
@@ -207,7 +220,4 @@ if __name__ == '__main__':
     elif len(sys.argv) == 3:
         csv_fname = sys.argv[2]
 
-
     visualize_csv(tar_fname, csv_fname)
-
-
