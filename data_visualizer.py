@@ -5,12 +5,11 @@
 import os
 import time
 import shutil
-import data_reader
 import sys
 # noinspection PyClassHasNoInit
 import tarfile
 import pygame
-
+import data_reader
 
 class DrawgcWrapper:
     def __init__(self):
@@ -28,14 +27,15 @@ class DrawgcWrapper:
 class DrawingStatus:
     def __init__(self):
         pass
-    cur_frame_index = 0
+    draw_many_gazes = 0
+    cur_frame_id = 0
     total_frame = 0
     target_fps = 60
     pause = False
     terminated = False
 
 
-ds = DrawingStatus()
+DS = DrawingStatus()
 
 
 def preprocess_and_sanity_check(png_files, frameid_list):
@@ -75,43 +75,43 @@ def check_gaze_range(pos_x, pos_y, w, h):
 
 
 def event_handler_func():
-    global ds
+    global DS
 
     for event in pygame.event.get():
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_UP:
                 print("Fast-backward 5 seconds")
-                ds.cur_frame_id -= 5 * ds.target_fps
+                DS.cur_frame_id -= 5 * DS.target_fps
             elif event.key == pygame.K_DOWN:
                 print("Fast-forward 5 seconds")
-                ds.cur_frame_id += 5 * ds.target_fps
+                DS.cur_frame_id += 5 * DS.target_fps
             if event.key == pygame.K_LEFT:
                 print("Moving to previous frame")
-                ds.cur_frame_id -= 1
+                DS.cur_frame_id -= 1
             elif event.key == pygame.K_RIGHT:
                 print("Moving to next frame")
-                ds.cur_frame_id += 1
+                DS.cur_frame_id += 1
             elif event.key == pygame.K_F3:
                 p = float(
-                    raw_input("Seeking through the video. Enter a percentage in float: "))
-                ds.cur_frame_id = int(p/100*ds.total_frame)
+                    input("Seeking through the video. Enter a percentage in float: "))
+                DS.cur_frame_id = int(p/100*DS.total_frame)
             elif event.key == pygame.K_SPACE:
-                ds.pause = not ds.pause
+                DS.pause = not DS.pause
             elif event.key == pygame.K_F9:
-                ds.draw_many_gazes = not ds.draw_many_gazes
+                DS.draw_many_gazes = not DS.draw_many_gazes
                 print("draw all gazes belonging to a frame: %s" %
-                      ("ON" if ds.draw_many_gazes else "OFF"))
+                      ("ON" if DS.draw_many_gazes else "OFF"))
             elif event.key == pygame.K_F11:
-                ds.target_fps -= 2
-                print("Setting target FPS to %d" % ds.target_fps)
+                DS.target_fps -= 2
+                print("Setting target FPS to %d" % DS.target_fps)
             elif event.key == pygame.K_F12:
-                ds.target_fps += 2
-                print("Setting target FPS to %d" % ds.target_fps)
+                DS.target_fps += 2
+                print("Setting target FPS to %d" % DS.target_fps)
             elif event.key == pygame.K_ESCAPE:
-                ds.terminated = True
+                DS.terminated = True
                 print("\nStopping replay.")
-    ds.cur_frame_id = max(0, min(ds.cur_frame_id, ds.total_frame - 1))
-    ds.target_fps = max(1, ds.target_fps)
+    DS.cur_frame_id = max(0, min(DS.cur_frame_id, DS.total_frame - 1))
+    DS.target_fps = max(1, DS.target_fps)
 
 
 def visualize_csv(tar_fname, csv_fname):
@@ -146,11 +146,11 @@ def visualize_csv(tar_fname, csv_fname):
     y_scale = 5.0
     w, h = int(origin_w*x_scale), int(origin_h*y_scale)
 
-    global ds
-    ds.target_fps = 60
-    ds.total_frame = len(png_files)
-    ds.cur_frame_id = 0
-    ds.terminated = False
+    global DS
+    DS.target_fps = 60
+    DS.total_frame = len(png_files)
+    DS.cur_frame_id = 0
+    DS.terminated = False
 
     # init Drawgc Wrapper
     dw = DrawgcWrapper()
@@ -163,11 +163,11 @@ def visualize_csv(tar_fname, csv_fname):
                             pygame.DOUBLEBUF | pygame.RLEACCEL, 32)
     screen = pygame.display.get_surface()
 
-    while True:  # ds.cur_frame_id < ds.total_frame:
+    while True:  # DS.cur_frame_id < DS.total_frame:
         event_handler_func()
 
         # Load PNG file and draw the frame and the gaze-contingent window
-        frame_id = frameid_list[ds.cur_frame_id]
+        frame_id = frameid_list[DS.cur_frame_id]
         png_fname = temp_extract_full_path_dir + '/' + frame_id + '.png'
         # check if the corresponding png file exists
         if not os.path.isfile(png_fname):
@@ -192,9 +192,9 @@ def visualize_csv(tar_fname, csv_fname):
 
         pygame.display.flip()
 
-        if not ds.pause:
-            ds.cur_frame_id = ds.cur_frame_id + 1
-        if ds.terminated:
+        if not DS.pause:
+            DS.cur_frame_id = DS.cur_frame_id + 1
+        if DS.terminated:
             break
 
         duration = frameid2duration[frame_id]

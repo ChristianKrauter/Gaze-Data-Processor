@@ -2,13 +2,14 @@
 #
 # Read gaze dataset from asc file or csv file
 # -----------------------
-import os
+# import os
+import sys
 import re
-import threading
-import time
-import numpy as np
-from IPython import embed
-from scipy import misc
+# import threading
+# import time
+# import numpy as np
+# from IPython import embed
+# from scipy import misc
 
 
 def read_gaze_data_asc_file(fname):
@@ -49,7 +50,7 @@ def read_gaze_data_asc_file(fname):
     validation_msg = re.compile(
         r"MSG\s+(\d+)\s+!CAL\sVALIDATION.+ERROR\s+(%s)\s+avg\.\s+(%s)\s+max\s+OFFSET.+" % (freg, freg))
 
-    for (i, line) in enumerate(lines):
+    for (_, line) in enumerate(lines):
         match_sample = gaze_msg.match(line)
         if match_sample:
             timestamp, xpos, ypos = match_sample.group(
@@ -124,7 +125,7 @@ def read_gaze_data_asc_file(fname):
     if len(frameid2pos) < 1000:     # simple sanity check
         print("Warning: did you provide the correct ASC file? Because the data for only %d frames is detected" % (
             len(frameid2pos)))
-        raw_input("Press any key to continue")
+        input("Press any key to continue")
 
     few_cnt = 0
     n_frame = len(frameid_list)
@@ -152,7 +153,7 @@ def read_gaze_data_csv_file(fname, separator=',', pos_separator=','):
             a dictionary mapping frame ID to action """
     with open(fname, 'r') as f:
         lines = f.readlines()
-    frameid, xpos, ypos = 'BEFORE-FIRST-FRAME', None, None
+    frameid, _, _ = 'BEFORE-FIRST-FRAME', None, None
     frameid2pos = {frameid: []}
     frameid2action = {frameid: None}
     frameid2duration = {frameid: None}
@@ -229,5 +230,10 @@ def read_gaze_data_csv_file(fname, separator=',', pos_separator=','):
 
 
 if __name__ == '__main__':
-    read_gaze_data_csv_file(
-        '/Users/lguan/Documents/Study/Research/Gaze-Dataset/data_cleaning/csv/191_JAW_9955253_Jun-25-14-35-04.txt')
+    if len(sys.argv) < 2:
+        print('Usage: python data_reader.py csv_fname')
+        exit(1)
+
+    csv_fname = sys.argv[1]
+
+    read_gaze_data_csv_file( csv_fname)

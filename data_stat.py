@@ -10,7 +10,7 @@ import data_reader
 import utils
 
 
-def do_per_game_stat(csv_dir, fname_regex='.*_.*_.*\.txt', is_ignore_null=False, func_fname_condition=None):
+def do_per_game_stat(csv_dir, fname_regex=r'.*_.*_.*\.txt', is_ignore_null=False, func_fname_condition=None):
     # stat data
     cnt_file = 0
     cnt_frame = 0
@@ -113,7 +113,7 @@ def do_per_game_stat(csv_dir, fname_regex='.*_.*_.*\.txt', is_ignore_null=False,
     print('-------------------------------------')
 
 
-def do_per_trial_stat(csv_dir, saved_dir=None, fname_regex='.*_.*_.*\.txt', is_ignore_null=False, func_fname_condition=None):
+def do_per_trial_stat(csv_dir, saved_dir=None, fname_regex=r'.*_.*_.*\.txt', is_ignore_null=False, func_fname_condition=None):
     # stat data
     stat_dict = {}
     cnt_file = 0

@@ -11,11 +11,11 @@ def read_excel(excel_fname, id_col_name, sheet_name, func_id_data_type=None):
 
     # read header values into the list
     col_names = [str(sheet.cell(0, col_index).value)
-                 for col_index in xrange(sheet.ncols)]
+                 for col_index in range(sheet.ncols)]
     data_dict = {}
-    for row_index in xrange(1, sheet.nrows):
+    for row_index in range(1, sheet.nrows):
         col_data = {}
-        for col_index in xrange(sheet.ncols):
+        for col_index in range(sheet.ncols):
             col_data[col_names[col_index]] = str(
                 sheet.cell(row_index, col_index).value)
 
@@ -45,21 +45,21 @@ def fill_excel_col(dest_excel_fname, dest_col_name, dest_id_col_name, dest_sheet
 
     # find destinated id column index
     destinated_id_col_index = 0
-    for col_index in xrange(destinated_sheet.ncols):
+    for col_index in range(destinated_sheet.ncols):
         if str(destinated_sheet.cell(0, col_index).value) == dest_id_col_name:
             destinated_id_col_index = col_index
             break
 
     # find destinated column index
     destinated_col_index = 0
-    for col_index in xrange(destinated_sheet.ncols):
+    for col_index in range(destinated_sheet.ncols):
         if str(destinated_sheet.cell(0, col_index).value) == dest_col_name:
             destinated_col_index = col_index
             break
 
-    for row_index in xrange(0, destinated_sheet.nrows):
+    for row_index in range(0, destinated_sheet.nrows):
         # copy all other values
-        for col_index in xrange(destinated_sheet.ncols):
+        for col_index in range(destinated_sheet.ncols):
             edited_destinated_sheet.write(
                 row_index, col_index, destinated_sheet.cell(row_index, col_index).value)
         # if row_index is 0, we just copy column names (titles), then continue
