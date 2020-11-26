@@ -132,9 +132,9 @@ def visualize_csv(tar_fname, csv_fname):
 
     # init pygame and other stuffs
     origin_w = 160
-    x_scale = 8.0
+    x_scale = 5.0
     origin_h = 210
-    y_scale = 4.0
+    y_scale = 5.0
     w, h = int(origin_w*x_scale), int(origin_h*y_scale)
 
     global ds
@@ -155,7 +155,7 @@ def visualize_csv(tar_fname, csv_fname):
 
     while True: #ds.cur_frame_id < ds.total_frame:
         event_handler_func()
-        
+
         # Load PNG file and draw the frame and the gaze-contingent window
         frame_id = frameid_list[ds.cur_frame_id]
         png_fname = temp_extract_full_path_dir + '/' + frame_id + '.png'
@@ -201,7 +201,7 @@ if __name__ == '__main__':
         exit(1)
 
     tar_fname = sys.argv[1]
-    
+
     if len(sys.argv) == 2:
         csv_fname = sys.argv[1].split(".tar")[0] + ".txt"
     elif len(sys.argv) == 3:
